@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>知识库</title>
+  <link rel="stylesheet" href="/styles.css?v=20260904-20">
+  <link rel="stylesheet" href="/vendor/vue-document-preview/preview.css?v=20260902-1">
+</head>
+<body>
+  <main class="shell">
+    <section id="auth-view" class="auth-view">
+      <div class="auth-panel">
+        <div class="brand-lockup">
+          <div class="brand-mark">知</div>
+          <div>
+            <strong>知识库</strong>
+            <span>团队文档空间</span>
+          </div>
+        </div>
+        <h1>登录知识库</h1>
+        <p class="muted">集中管理团队资料，让智能体随时找到需要的知识。</p>
+        <div class="tabs">
+          <button id="login-tab" class="tab active" type="button">登录</button>
+        </div>
+        <form id="auth-form">
+          <label>用户名<input id="username" required minlength="2" maxlength="64" autocomplete="username" placeholder="至少 2 个汉字或字符"></label>
+          <label>密码<input id="password" required minlength="8" type="password" autocomplete="current-password"></label>
+          <button class="primary wide" type="submit"><span id="auth-submit">登录</span></button>
+        </form>
+        <p class="auth-help">账号由管理员创建，如需开通账号请联系管理员。</p>
+        <p id="auth-error" class="error"></p>
+      </div>
+    </section>
+
+    <section id="app-view" class="app-view hidden">
+      <header class="topbar">
+        <div class="brand-lockup app-brand">
+          <div class="brand-mark">知</div>
+          <div>
+            <strong>知识库</strong>
+            <span>智能体知识空间</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a class="mcp-token-link" href="/mcp-token.html" title="获取远程连接 Token">远程连接</a>
+          <a id="admin-link" class="mcp-token-link hidden" href="/admin.html" title="后台管理">后台管理</a>
+          <div id="user-menu" class="user-menu">
+            <button id="user-menu-button" class="user-menu-button" type="button" aria-expanded="false" aria-haspopup="true" title="打开用户菜单">
+              <span id="user-avatar" class="user-avatar" aria-hidden="true">知</span>
+              <span id="user-menu-name" class="user-menu-name"></span>
+              <span class="user-menu-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div id="user-menu-panel" class="user-menu-panel hidden" role="menu">
+              <div class="user-menu-heading">
+                <span id="user-menu-panel-avatar" class="user-avatar user-menu-panel-avatar" aria-hidden="true">知</span>
+                <div>
+                  <strong id="user-menu-panel-name"></strong>
+                  <small>当前登录用户</small>
+                </div>
+              </div>
+              <button id="change-password-button" class="user-menu-item" type="button" role="menuitem">修改密码</button>
+              <button id="logout-button" class="user-menu-item user-menu-logout" type="button" role="menuitem">退出登录</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div id="app-body" class="app-body view-knowledge">
+        <aside class="primary-sidebar">
+          <nav class="primary-nav" aria-label="主导航">
+            <button class="primary-nav-item active" data-view="knowledge" type="button">
+              <span class="nav-icon" aria-hidden="true">▦</span>
+              <span>知识库</span>
+            </button>
+            <button class="primary-nav-item" data-view="team" type="button">
+              <span class="nav-icon" aria-hidden="true">♧</span>
+              <span>团队空间</span>
+            </button>
+            <button class="primary-nav-item" data-view="recycle" type="button">
+              <span class="nav-icon" aria-hidden="true">♲</span>
+              <span>回收站</span>
+            </button>
+          </nav>
+          <div class="primary-sidebar-footer">
+            <span class="storage-dot" aria-hidden="true"></span>
+            <span>本地存储</span>
+          </div>
+        </aside>
+
+        <aside id="folder-sidebar" class="folder-sidebar">
+          <div id="knowledge-sidebar-content">
+            <button id="new-folder-button" class="new-folder-button" type="button">
+              <span aria-hidden="true">＋</span>
+              <span>新建文件夹</span>
+            </button>
+            <nav class="side-nav secondary-side-nav" aria-label="知识库文件">
+              <button id="knowledge-all-files-button" class="side-nav-item active" data-file-type="all" type="button">
+                <span class="nav-icon" aria-hidden="true">▦</span>
+                <span>全部文件 <small id="sidebar-document-count"></small></span>
+              </button>
+            </nav>
+            <div class="sidebar-heading">
+              <strong>文件类型</strong>
+              <span class="muted">分类</span>
+            </div>
+            <nav id="file-type-tree" class="file-type-tree" aria-label="文件类型"></nav>
+          </div>
+        </aside>
+
+        <section class="main-content">
+          <p id="app-message" class="message"></p>
+          <div id="knowledge-content-panel" class="content-panel">
+            <div id="team-detail-header" class="team-detail-header hidden">
+              <button id="team-detail-back" class="team-detail-back" type="button">
+                <span aria-hidden="true">‹</span>
+                <span>团队空间</span>
+              </button>
+              <div class="team-detail-summary">
+                <span id="team-detail-avatar" class="team-detail-avatar" aria-hidden="true">知</span>
+                <div>
+                  <strong id="team-detail-name">团队空间</strong>
+                  <small id="team-detail-meta"></small>
+                </div>
+              </div>
+              <nav class="team-detail-tabs" aria-label="团队空间菜单">
+                <button class="team-detail-tab active" data-team-tab="all" type="button">全部</button>
+                <button class="team-detail-tab" data-team-tab="members" type="button">成员列表</button>
+                <button class="team-detail-tab" data-team-tab="recycle" type="button">回收站</button>
+              </nav>
+            </div>
+            <div id="team-detail-files">
+              <div id="breadcrumb" class="breadcrumb">
+              <div id="breadcrumb-path" class="breadcrumb-path"></div>
+              <label class="breadcrumb-knowledge-select">
+                <span>知识库</span>
+                <select id="knowledge-base-select" aria-label="选择知识库"></select>
+              </label>
+              </div>
+              <div class="content-toolbar">
+              <div>
+                <label class="global-search">
+                  <span aria-hidden="true">⌕</span>
+                  <input id="search-input" type="search" placeholder="搜索文件名、描述或标签">
+                </label>
+              </div>
+              <div class="content-actions">
+                <button id="team-new-folder-button" class="ghost team-new-folder-button" type="button">
+                  <span aria-hidden="true">＋</span>
+                  <span>新建文件夹</span>
+                </button>
+                <label id="upload-button" class="upload-button" title="请选择具体知识库后上传">
+                  <span aria-hidden="true">↑</span>
+                  <span id="upload-button-label">上传文件</span>
+                  <input id="file-input" type="file" multiple accept=".pdf,.txt,.md,.markdown,.html,.htm,.png,.jpg,.jpeg,.gif,.webp,.ppt,.pptx,.doc,.docx,.xls,.xlsx">
+                </label>
+                <div id="team-file-type-filter" class="team-file-type-filter hidden">
+                  <button
+                    id="team-file-type-button"
+                    class="icon-button"
+                    type="button"
+                    title="文件类型筛选"
+                    aria-label="文件类型筛选"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <span aria-hidden="true">☷</span>
+                  </button>
+                  <div id="team-file-type-menu" class="team-file-type-menu hidden"></div>
+                </div>
+                <button id="refresh-button" class="icon-button" type="button" title="刷新列表" aria-label="刷新列表">
+                  <span aria-hidden="true">↻</span>
+                </button>
+              </div>
+              </div>
+              <section id="upload-progress" class="upload-progress hidden" aria-live="polite">
+              <div class="upload-progress-heading">
+                <strong id="upload-progress-title">准备上传</strong>
+                <span id="upload-progress-percent">0%</span>
+              </div>
+              <div class="upload-progress-track"><span id="upload-progress-bar"></span></div>
+              <div class="upload-progress-meta">
+                <span id="upload-progress-file">等待开始</span>
+                <span id="upload-progress-count"></span>
+              </div>
+              <button id="cancel-upload-button" class="ghost upload-cancel-button" type="button">取消上传</button>
+              </section>
+              <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>名称</th>
+                    <th>类型</th>
+                    <th>大小</th>
+                    <th>上传者</th>
+                    <th>上传时间</th>
+                  </tr>
+                </thead>
+                <tbody id="document-table"></tbody>
+              </table>
+              <div id="empty-state" class="empty-state hidden">
+                <div class="empty-icon" aria-hidden="true">▱</div>
+                <strong>这个文件夹还是空的</strong>
+                <span>上传文档，开始构建智能体的知识库</span>
+              </div>
+              </div>
+            </div>
+            <section id="team-members-panel" class="team-members-panel hidden">
+              <div class="team-subpanel-heading">
+                <div>
+                  <h2>成员列表</h2>
+                  <p>管理可以访问本团队空间的成员。</p>
+                </div>
+                <button id="add-team-member-button" class="primary" type="button">
+                  <span aria-hidden="true">＋</span>
+                  <span>添加成员</span>
+                </button>
+              </div>
+              <p id="team-members-message" class="message"></p>
+              <div class="team-members-table-wrap">
+                <table class="team-members-table">
+                  <thead>
+                    <tr><th>成员</th><th>角色</th><th>加入时间</th><th></th></tr>
+                  </thead>
+                  <tbody id="team-members-table"></tbody>
+                </table>
+              </div>
+            </section>
+            <section id="team-recycle-panel" class="team-recycle-panel hidden">
+              <div class="team-subpanel-heading">
+                <div>
+                  <h2>空间回收站</h2>
+                  <p>普通成员只显示自己删除的内容，管理员可以查看全部删除内容。</p>
+                </div>
+                <div class="workspace-heading-actions">
+                  <button id="empty-team-recycle-button" class="ghost danger-outline" type="button">清空回收站</button>
+                  <button id="team-recycle-refresh-button" class="icon-button" type="button" title="刷新空间回收站" aria-label="刷新空间回收站">↻</button>
+                </div>
+              </div>
+              <p id="team-recycle-message" class="message"></p>
+              <div class="table-wrap workspace-table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>名称</th><th>删除者</th><th>大小</th><th>类型</th><th>删除时间</th><th>有效期至</th><th>操作</th></tr>
+                  </thead>
+                  <tbody id="team-recycle-table"></tbody>
+                </table>
+                <div id="team-recycle-empty" class="empty-state hidden">
+                  <div class="empty-icon" aria-hidden="true">♲</div>
+                  <strong>空间回收站是空的</strong>
+                  <span>本空间删除的文件和空文件夹会显示在这里。</span>
+                </div>
+              </div>
+            </section>
+          </div>
+          <section id="team-space-view" class="content-panel workspace-panel hidden">
+            <div class="workspace-heading">
+              <div>
+                <h1>团队空间</h1>
+                <p>团队成员在同一个空间中协作管理资料。</p>
+              </div>
+              <div class="workspace-heading-actions">
+                <button id="create-team-space-button" class="primary workspace-create-button" type="button">
+                  <span aria-hidden="true">＋</span>
+                  <span>创建团队空间</span>
+                </button>
+                <button id="team-refresh-button" class="icon-button" type="button" title="刷新团队空间" aria-label="刷新团队空间">↻</button>
+              </div>
+            </div>
+            <div id="team-space-cards" class="team-space-cards"></div>
+            <div id="team-space-empty" class="empty-state hidden">
+              <div class="empty-icon" aria-hidden="true">♧</div>
+              <strong>暂无可访问的团队空间</strong>
+              <span>创建或等待管理员开放知识库后，这里会显示团队空间。</span>
+            </div>
+          </section>
+          <section id="recycle-bin-view" class="content-panel workspace-panel hidden">
+            <div class="workspace-heading recycle-heading">
+              <div>
+                <h1>回收站</h1>
+                <p>删除的文件和空文件夹会按系统配置暂存，保留时长可由管理员调整。</p>
+              </div>
+              <div class="workspace-heading-actions">
+                <button id="empty-recycle-button" class="ghost danger-outline" type="button">清空回收站</button>
+                <button id="recycle-refresh-button" class="icon-button" type="button" title="刷新回收站" aria-label="刷新回收站">↻</button>
+              </div>
+            </div>
+            <div class="table-wrap workspace-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>名称</th>
+                    <th>所在知识库</th>
+                    <th>大小</th>
+                    <th>类型</th>
+                    <th>删除时间</th>
+                    <th>有效期至</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+              <tbody id="recycle-bin-table"></tbody>
+              </table>
+              <div id="recycle-bin-empty" class="empty-state hidden">
+                <div class="empty-icon" aria-hidden="true">♲</div>
+                <strong>回收站是空的</strong>
+                <span>删除的文件和空文件夹会显示在这里。</span>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </section>
+  </main>
+  <dialog id="folder-dialog">
+    <form id="folder-form" method="dialog">
+      <h2 id="folder-dialog-title">新建文件夹</h2>
+      <label id="folder-kb-field">所属知识库<select id="folder-kb-select"></select></label>
+      <label>文件夹名称<input id="folder-name" required maxlength="255" autocomplete="off"></label>
+      <p id="folder-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="cancel-folder-button" class="ghost" type="button">取消</button>
+        <button id="folder-submit" class="primary" type="submit">创建</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="move-dialog">
+    <form id="move-form" method="dialog">
+      <h2 id="move-dialog-title">移动</h2>
+      <label>目标文件夹
+        <select id="move-destination"></select>
+      </label>
+      <p id="move-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="cancel-move-button" class="ghost" type="button">取消</button>
+        <button class="primary" type="submit">移动</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="document-rename-dialog">
+    <form id="document-rename-form" method="dialog">
+      <h2>重命名文档</h2>
+      <label>文档名称
+        <input id="document-rename-name" required minlength="1" maxlength="255" autocomplete="off">
+      </label>
+      <p id="document-rename-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="cancel-document-rename-button" class="ghost" type="button">取消</button>
+        <button class="primary" type="submit">保存</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="copy-dialog">
+    <form id="copy-form" method="dialog">
+      <h2 id="copy-dialog-title">复制</h2>
+      <label>复制到
+        <select id="copy-target-type">
+          <option value="team">团队空间</option>
+          <option value="personal">个人知识库</option>
+        </select>
+      </label>
+      <label id="copy-target-label"><span id="copy-target-label-text">目标团队空间</span>
+        <select id="copy-target-select"></select>
+      </label>
+      <label>目标文件夹
+        <select id="copy-folder-select"></select>
+      </label>
+      <p id="copy-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="cancel-copy-button" class="ghost" type="button">取消</button>
+        <button id="copy-submit" class="primary" type="submit">开始复制</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="password-dialog">
+    <form id="password-form" method="dialog">
+      <h2>修改密码</h2>
+      <label>当前密码<input id="current-password" type="password" autocomplete="current-password" required></label>
+      <label>新密码<input id="new-password" type="password" minlength="8" maxlength="128" autocomplete="new-password" required></label>
+      <label>确认新密码<input id="confirm-password" type="password" minlength="8" maxlength="128" autocomplete="new-password" required></label>
+      <p id="password-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="cancel-password-button" class="ghost" type="button">取消</button>
+        <button class="primary" type="submit">保存密码</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="team-space-dialog">
+    <form id="team-space-form" method="dialog">
+      <h2 id="team-space-dialog-title">创建团队空间</h2>
+      <label>空间名称<input id="team-space-name" required maxlength="128" autocomplete="off" placeholder="例如：产品研发协作空间"></label>
+      <label>空间描述<textarea id="team-space-description" maxlength="500" rows="4" placeholder="填写空间用途，便于团队成员识别"></textarea></label>
+      <p id="team-space-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="cancel-team-space-button" class="ghost" type="button">取消</button>
+        <button id="team-space-submit" class="primary" type="submit">创建空间</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="team-member-dialog">
+    <form id="team-member-form" method="dialog">
+      <h2>添加团队成员</h2>
+      <label>选择用户
+        <select id="team-member-select"></select>
+      </label>
+      <p id="team-member-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="cancel-team-member-button" class="ghost" type="button">取消</button>
+        <button class="primary" type="submit">添加成员</button>
+      </div>
+    </form>
+  </dialog>
+  <section id="reader-view" class="reader-view hidden" aria-label="文档阅读器">
+    <header class="reader-topbar">
+      <button id="reader-close-button" class="reader-icon-button" type="button" title="关闭阅读器" aria-label="关闭阅读器">×</button>
+      <div class="reader-title-wrap">
+        <strong id="reader-title">文档阅读</strong>
+        <span id="reader-meta"></span>
+      </div>
+      <div class="reader-tools">
+        <div id="reader-html-tools" class="reader-html-tools hidden">
+          <button id="reader-html-prev" class="reader-tool-button" type="button" title="上一页" aria-label="上一页">‹</button>
+          <span id="reader-html-page">1 / 1</span>
+          <button id="reader-html-next" class="reader-tool-button" type="button" title="下一页" aria-label="下一页">›</button>
+        </div>
+        <button id="reader-zoom-out" class="reader-tool-button" type="button" title="缩小" aria-label="缩小">−</button>
+        <span id="reader-zoom-label">100%</span>
+        <button id="reader-zoom-in" class="reader-tool-button" type="button" title="放大" aria-label="放大">＋</button>
+        <button id="reader-download-button" class="reader-tool-button reader-download-button" type="button" title="下载文件" aria-label="下载文件">↓</button>
+      </div>
+    </header>
+    <main id="reader-body" class="reader-body"></main>
+  </section>
+  <script src="/app.js?v=20260904-26"></script>
+</body>
+</html>

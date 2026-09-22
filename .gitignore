@@ -1,0 +1,36 @@
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.git-backup/
+__pycache__/
+*.py[cod]
+.venv/
+.mcp-venv/
+node_modules/
+frontend/preview-app/node_modules/
+backend/data/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.log
+*.pid
+*.db
+*.sqlite
+*.sqlite3
+
+# Local-only process notes and operational documents.
+/*.md
+!/README.md
+/*.txt
+backend/app/MCP启动脚本.txt
+
+# Local certificates and private keys.
+*.pem
+*.crt
+*.cer
+*.key
+*.pfx
+*.p12

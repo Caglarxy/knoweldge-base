@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MCP 配置 - 知识库</title>
+  <link rel="stylesheet" href="/styles.css?v=20260903-5">
+</head>
+<body class="token-page">
+  <main class="token-shell">
+    <header class="token-header">
+      <a class="token-brand" href="/">
+        <span class="brand-mark">知</span>
+        <span>
+          <strong>知识库</strong>
+          <small>MCP 连接配置</small>
+        </span>
+      </a>
+      <nav class="token-header-actions">
+        <a id="admin-link" class="token-back-link hidden" href="/admin.html">后台管理</a>
+        <a class="token-back-link" href="/">返回知识库</a>
+      </nav>
+    </header>
+
+    <section class="token-hero">
+      <div>
+        <p class="eyebrow">AGENT CONNECTION</p>
+        <h1>让智能体连接知识库</h1>
+        <p class="token-lead">
+          使用当前浏览器登录账号生成 MCP 访问凭证。用户名只读显示，密码不会被页面读取、
+          保存或返回。
+        </p>
+      </div>
+      <div class="token-session-status">
+        <span class="token-status-dot" aria-hidden="true"></span>
+        <div>
+          <strong id="token-login-state">检查当前登录状态...</strong>
+          <small id="token-user-label">正在读取账号信息</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="token-grid">
+      <section class="token-panel">
+        <div class="token-panel-heading">
+          <div>
+            <p class="eyebrow">TOKEN</p>
+            <h2>获取 access_token</h2>
+            <p class="muted">有效期由管理员为当前账号设置</p>
+          </div>
+        </div>
+        <div class="readonly-account">
+          <span>当前账号</span>
+          <strong id="current-username">未登录</strong>
+        </div>
+        <button id="token-submit" class="primary wide" type="button" disabled>
+          获取 access_token
+        </button>
+        <p id="token-error" class="error"></p>
+
+        <section id="token-result" class="token-result hidden" aria-live="polite">
+          <div class="token-result-heading">
+            <div>
+              <h3>Token 已生成</h3>
+              <p id="token-expiry" class="muted"></p>
+            </div>
+            <span class="config-badge">Bearer</span>
+          </div>
+          <label class="token-field">
+            access_token
+            <textarea id="access-token" readonly rows="5" spellcheck="false"></textarea>
+          </label>
+          <div class="token-actions">
+            <button id="copy-token-button" class="primary" type="button">复制 Token</button>
+            <button id="clear-token-button" class="ghost" type="button">清除显示</button>
+          </div>
+          <p id="copy-state" class="copy-state"></p>
+        </section>
+      </section>
+
+      <section class="token-info-panel">
+        <p class="eyebrow">HOW IT WORKS</p>
+        <h2>当前登录态直接签发</h2>
+        <ul class="token-info-list">
+          <li>页面从浏览器登录态获取当前用户名。</li>
+          <li>点击按钮后，服务端按当前账号策略签发 MCP Token。</li>
+          <li>密码不会出现在页面、请求参数、配置或日志中。</li>
+          <li>Token 只应粘贴到可信的智能体配置中。</li>
+        </ul>
+        <p id="session-hint" class="config-help"></p>
+      </section>
+    </section>
+
+    <section class="token-config-panel">
+      <div class="token-config-heading">
+        <div>
+          <p class="eyebrow">REMOTE MCP</p>
+          <h2>远程 MCP 配置</h2>
+          <p class="muted">适用于 WorkBuddy 和其他支持 Bearer Token 的客户端</p>
+        </div>
+        <span class="config-badge">8020 · Streamable HTTP</span>
+      </div>
+      <label class="endpoint-field">
+        MCP 地址
+        <input id="mcp-endpoint" type="url" readonly spellcheck="false">
+      </label>
+      <pre id="mcp-config-preview" class="config-preview"></pre>
+      <div class="config-actions">
+        <button id="copy-remote-config" class="ghost" type="button">复制远程配置</button>
+      </div>
+      <p class="config-help">
+        地址根据当前页面访问的服务器自动生成，不使用固定的 127.0.0.1。远程连接需要
+        将生成的 Token 放入 Authorization 请求头。
+      </p>
+    </section>
+
+    <section class="token-config-panel token-dialogue-panel">
+      <div class="token-config-heading">
+        <div>
+          <p class="eyebrow">OAUTH MCP</p>
+          <h2>8024 对话授权配置</h2>
+          <p class="muted">首次连接时由 智能体 自动打开浏览器授权页，后续自动刷新 Token</p>
+        </div>
+        <span class="config-badge">8024 · HTTPS OAuth</span>
+      </div>
+      <label class="endpoint-field">
+        MCP 地址
+        <input id="dialogue-endpoint" type="url" readonly spellcheck="false">
+      </label>
+      <pre id="dialogue-config-preview" class="config-preview"></pre>
+      <div class="config-actions">
+        <button id="copy-dialogue-config" class="ghost" type="button">复制 8024 配置</button>
+      </div>
+      <p class="config-help">
+        此配置不填写 Authorization、用户名或密码。地址使用服务器局域网 IP 和 HTTPS，
+        由于需要ssl证书，此配置 WorkBuddy暂时不可用！适合千问办公智能体使用知识库的场景。
+      </p>
+    </section>
+  </main>
+  <script src="/mcp-token.js?v=20260907-1"></script>
+</body>
+</html>

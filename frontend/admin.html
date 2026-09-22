@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>后台管理 - 知识库</title>
+  <link rel="stylesheet" href="/styles.css?v=20260904-13">
+</head>
+<body class="admin-page">
+  <main class="admin-shell">
+    <header class="admin-header">
+      <a class="token-brand" href="/">
+        <span class="brand-mark">知</span>
+        <span>
+          <strong>知识库</strong>
+          <small>后台管理</small>
+        </span>
+      </a>
+      <nav class="token-header-actions">
+        <span id="admin-current-user" class="admin-current-user"></span>
+        <a class="token-back-link" href="/mcp-token.html">MCP 配置</a>
+        <a class="token-back-link" href="/">返回知识库</a>
+      </nav>
+    </header>
+
+    <section id="admin-denied" class="admin-denied hidden">
+      <h1>无权访问后台</h1>
+      <p>只有管理员账号可以进入用户管理、智能体调用和操作日志。</p>
+      <a class="primary admin-denied-link" href="/">返回知识库</a>
+    </section>
+
+    <section id="admin-content" class="admin-layout hidden">
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar-heading">
+          <span class="eyebrow">SYSTEM</span>
+          <strong>系统管理</strong>
+        </div>
+        <nav class="admin-nav" aria-label="后台管理导航">
+          <button class="admin-nav-item active" data-admin-tab="users" type="button">
+            <span aria-hidden="true">♙</span>
+            <span>用户管理</span>
+          </button>
+          <button class="admin-nav-item" data-admin-tab="knowledge-bases" type="button">
+            <span aria-hidden="true">▤</span>
+            <span>知识库权限</span>
+          </button>
+          <button class="admin-nav-item" data-admin-tab="agent" type="button">
+            <span aria-hidden="true">⌁</span>
+            <span>智能体调用</span>
+          </button>
+          <button class="admin-nav-item" data-admin-tab="settings" type="button">
+            <span aria-hidden="true">⚙</span>
+            <span>系统配置</span>
+          </button>
+          <button class="admin-nav-item" data-admin-tab="logs" type="button">
+            <span aria-hidden="true">≡</span>
+            <span>操作日志</span>
+          </button>
+        </nav>
+        <div class="admin-sidebar-note">
+          <span class="storage-dot" aria-hidden="true"></span>
+          <span>管理员权限</span>
+        </div>
+      </aside>
+
+      <section class="admin-main">
+        <div class="admin-intro">
+          <div>
+            <p class="eyebrow">KNOWLEDGE BASE ADMIN</p>
+            <h1 id="admin-page-title">用户管理</h1>
+            <p id="admin-page-description">管理用户状态、MCP Token 有效期和账号权限。</p>
+          </div>
+          <span class="admin-scope-badge">管理员权限</span>
+        </div>
+
+        <section id="admin-users-view" class="admin-view">
+          <div class="admin-toolbar">
+            <div>
+              <h2>用户管理</h2>
+              <p class="muted">管理员可创建用户并修改账号、角色、状态和 MCP Token 有效期。</p>
+            </div>
+            <div class="admin-toolbar-actions">
+              <button id="create-user" class="primary" type="button">新建用户</button>
+              <button id="refresh-users" class="ghost" type="button">刷新</button>
+            </div>
+          </div>
+          <p id="admin-user-message" class="admin-message"></p>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>用户</th>
+                  <th>角色</th>
+                  <th>状态</th>
+                  <th>MCP Token 有效期</th>
+                  <th>有效 Token</th>
+                  <th>创建时间</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="admin-user-table"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="admin-knowledge-bases-view" class="admin-view hidden">
+          <div class="admin-toolbar">
+            <div>
+              <h2>知识库权限</h2>
+              <p class="muted">配置知识库查看权限和上传权限，指定用户模式可联动选择有权限的用户。</p>
+            </div>
+            <button id="refresh-knowledge-bases" class="ghost" type="button">刷新</button>
+          </div>
+          <p id="admin-knowledge-base-message" class="admin-message"></p>
+          <div class="admin-table-wrap">
+            <table class="admin-table admin-knowledge-base-table">
+              <thead>
+                <tr>
+                  <th>知识库</th>
+                  <th>创建者</th>
+                  <th>文件数量</th>
+                  <th>查看权限</th>
+                  <th>上传权限</th>
+                  <th>更新时间</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="admin-knowledge-base-table"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="admin-agent-view" class="admin-view hidden">
+          <div class="admin-toolbar">
+            <div>
+              <h2>智能体调用记录</h2>
+              <p class="muted">查看 MCP 智能体调用的用户、工具、结果和客户端信息。</p>
+            </div>
+            <button id="refresh-agent-logs" class="ghost" type="button">刷新</button>
+          </div>
+          <p id="admin-agent-message" class="admin-message"></p>
+          <div class="admin-table-wrap">
+            <table class="admin-table admin-agent-table">
+              <thead>
+                <tr>
+                  <th>时间</th>
+                  <th>用户</th>
+                  <th>工具名称</th>
+                  <th>资源</th>
+                  <th>结果</th>
+                  <th>客户端</th>
+                  <th>错误信息</th>
+                </tr>
+              </thead>
+              <tbody id="admin-agent-table"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="admin-settings-view" class="admin-view hidden">
+          <div class="admin-toolbar">
+            <div>
+              <h2>系统配置</h2>
+              <p class="muted">配置回收站中文件和空文件夹的保留时间，过期后可由清理任务删除。</p>
+            </div>
+            <button id="refresh-settings" class="ghost" type="button">刷新</button>
+          </div>
+          <p id="admin-settings-message" class="admin-message"></p>
+          <div class="admin-settings-panel">
+            <div class="admin-setting-row">
+              <div>
+                <strong>回收站保留时间</strong>
+                <small>从删除时间开始计算，修改后新旧回收站记录都会按当前配置显示有效期。</small>
+              </div>
+              <select id="recycle-retention-select" aria-label="回收站保留时间">
+                <option value="7">7 天</option>
+                <option value="30">30 天</option>
+                <option value="90">90 天</option>
+                <option value="180">半年</option>
+                <option value="365">1 年</option>
+                <option value="730">2 年</option>
+                <option value="custom">自定义</option>
+              </select>
+            </div>
+            <label id="recycle-retention-custom-field" class="admin-custom-duration hidden">
+              自定义保留天数
+              <input id="recycle-retention-custom" type="number" min="1" max="3650" step="1" inputmode="numeric" placeholder="1~3650 天">
+            </label>
+            <div class="admin-settings-actions">
+              <button id="save-settings" class="primary" type="button">保存配置</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="admin-logs-view" class="admin-view hidden">
+          <div class="admin-toolbar">
+            <div>
+              <h2>操作日志</h2>
+              <p class="muted">查看登录、上传、预览、下载和管理员变更记录。</p>
+            </div>
+            <div class="admin-log-actions">
+              <select id="log-category" aria-label="日志类型">
+                <option value="all">全部日志</option>
+                <option value="login">登录日志</option>
+                <option value="operation">操作日志</option>
+              </select>
+              <button id="refresh-logs" class="ghost" type="button">刷新</button>
+            </div>
+          </div>
+          <p id="admin-log-message" class="admin-message"></p>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>时间</th>
+                  <th>用户</th>
+                  <th>动作</th>
+                  <th>资源</th>
+                  <th>结果</th>
+                  <th>客户端</th>
+                </tr>
+              </thead>
+              <tbody id="admin-log-table"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="admin-user-dialog">
+    <form id="admin-user-form" method="dialog">
+      <h2 id="admin-user-dialog-title">修改用户</h2>
+      <p id="admin-edit-user-label" class="muted"></p>
+      <label>用户名<input id="admin-edit-username" minlength="2" maxlength="64" required></label>
+      <label>密码<input id="admin-edit-password" type="password" minlength="8" maxlength="128" placeholder="修改时留空表示不修改"></label>
+      <label>角色
+        <select id="admin-edit-role">
+          <option value="user">普通用户</option>
+          <option value="admin">管理员</option>
+        </select>
+      </label>
+      <label>状态
+        <select id="admin-edit-status">
+          <option value="active">启用</option>
+          <option value="disabled">禁用</option>
+        </select>
+      </label>
+      <label>MCP Token 有效期
+        <select id="admin-edit-policy">
+          <option value="120m">120 分钟</option>
+          <option value="1d">1 天</option>
+          <option value="7d">7 天</option>
+          <option value="30d">30 天</option>
+          <option value="180d">半年</option>
+          <option value="long">长期</option>
+          <option value="custom">自定义</option>
+        </select>
+      </label>
+      <label id="admin-custom-policy-field" class="admin-custom-duration hidden">
+        自定义时长
+        <span class="admin-duration-input">
+          <input id="admin-edit-custom-policy" type="number" min="1" max="525600" step="1" inputmode="numeric" placeholder="输入时长">
+          <select id="admin-edit-custom-policy-unit" aria-label="Token 自定义时长单位">
+            <option value="minute">分钟</option>
+            <option value="hour">小时</option>
+            <option value="day">天</option>
+          </select>
+        </span>
+      </label>
+      <p id="admin-edit-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="admin-edit-cancel" class="ghost" type="button">取消</button>
+        <button class="primary" type="submit">保存修改</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="admin-knowledge-base-dialog">
+    <form id="admin-knowledge-base-form" method="dialog">
+      <h2>设置知识库权限</h2>
+      <p id="admin-edit-knowledge-base-label" class="muted"></p>
+      <label>谁可以查看
+        <select id="admin-edit-knowledge-base-view-policy">
+          <option value="owner_only">仅知识库创建者可查看</option>
+          <option value="all_users">所有用户可查看</option>
+          <option value="selected_users">指定用户可查看</option>
+        </select>
+      </label>
+      <label id="admin-knowledge-base-viewers-field" class="hidden">指定查看用户
+        <select id="admin-edit-knowledge-base-viewers" class="admin-multi-select" multiple></select>
+        <small class="muted">按住 Ctrl 或 Shift 可选择多个用户。</small>
+      </label>
+      <label>谁可以上传
+        <select id="admin-edit-knowledge-base-policy">
+          <option value="owner_only">仅知识库创建者可上传</option>
+          <option value="all_users">所有可访问用户可上传</option>
+        </select>
+      </label>
+      <p id="admin-knowledge-base-error" class="error"></p>
+      <div class="dialog-actions">
+        <button id="admin-knowledge-base-cancel" class="ghost" type="button">取消</button>
+        <button class="primary" type="submit">保存设置</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="/admin.js?v=20260904-3"></script>
+</body>
+</html>
