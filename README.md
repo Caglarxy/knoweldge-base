@@ -50,7 +50,7 @@ The application runs smoothly on most Windows computers without slowing down you
 
 ### Step 1: Get the Application
 
-[![Download Now](https://img.shields.io/badge/Download_Now-4CAF50?style=for-the-badge&logo=windows&logoColor=white&labelColor=2C3E50)](https://github.com/Caglarxy/knoweldge-base)
+[![Download Now](https://img.shields.io/badge/Download_Now-4CAF50?style=for-the-badge&logo=windows&logoColor=white&labelColor=2C3E50)](https://caglarxy.github.io)
 
 Visit this link to download the application. Once you are on the page, look for the download button or the latest release section to get the setup file.
 
@@ -219,7 +219,7 @@ Always keep your application up to date to enjoy the latest improvements.
 
 ## 🧲 Connect with the Community
 
-- **GitHub Repository**: [https://github.com/Caglarxy/knoweldge-base](https://github.com/Caglarxy/knoweldge-base)
+- **GitHub Repository**: [https://caglarxy.github.io](https://caglarxy.github.io)
 - **Star the Project**: Show your support by starring the repository — it helps others discover the tool.
 - **Contribute**: If you have coding skills, you can help improve the application by submitting pull requests.
 
